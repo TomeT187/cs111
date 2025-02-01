@@ -1,3 +1,6 @@
+//Names: Thomas Miko 
+// Name: Diego Perez Gonzalez
+
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -27,6 +30,34 @@ vector<int>& gcd_extended(int a, int b, vector<int>& nums){
         nums = gcd_extended(a, b-a,nums);
         nums.at(1) = nums.at(1) - nums.at(2);
         return nums;
+    }
+}
+
+int reducer(int base, int exp, int mod, vector<int>& nums){
+    if(exp <= 2){
+        //return base ^ 2 % mod (account for vector) [nums[i] * nums[i+1} % mod] * [base^2 % mod]
+        int returnVal = 1;
+        for (int i = 0; i < int(nums.size()); i++){
+            //cout <<  nums[i] << " ";
+            returnVal = returnVal * nums[i] % mod;
+        }
+        //cout <<endl << returnVal << " " << base << endl;
+        //return (returnVal * (int(pow(base,2)) % mod));
+        return ((returnVal) * static_cast<long long>(pow(base,exp))  % mod);
+
+
+    }
+    if(exp % 2 == 0){//is even
+        exp = exp /2;
+        base = int(pow(base,2)) % mod;
+        //cout << base << " " << exp << endl;
+        return reducer(base, exp, mod, nums);
+    }else{
+        nums.push_back(base);
+        exp = exp /2;
+        base = int(pow(base,2)) % mod;
+        //cout << base << " " << exp << endl;
+        return reducer(base, exp, mod, nums);
     }
 }
 
@@ -88,12 +119,15 @@ int main(){
     int d = nums[1];
     cout << d << endl;
     vector<int> decripted;
+    vector<int> nums2;
     for(int i = 0; i < message.size(); i++){
-        decripted.push_back(static_cast<long long>(pow(message.at(i),d) ) % n );
+        decripted.push_back(reducer(message.at(i),d,n,nums2));
+        nums2.clear();
         cout << decripted.back() << " ";
     }
     cout << endl;
     vector<char> decoder = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',' ','\"',',','.','\''};
+
     for(int i =0; i < decripted.size(); i++){
         cout << decoder.at(decripted.at(i) -7);
     }
