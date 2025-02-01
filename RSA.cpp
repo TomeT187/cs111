@@ -46,7 +46,7 @@ int main(){
     //verify public key is valid, must be relatively prime
     int key_gcd = gcd(e,n);
     if(key_gcd != 1 || n <= 0){
-        cout << "Public key is not valid!" << endl;
+        cout << "Public key is not valid!" ;
         return 0;
     }
 
@@ -78,14 +78,25 @@ int main(){
     //p cannot equal q, phi_n must be coprime with e
     int phi_n = (p-1) * (q-1);
     if(gcd(e,phi_n) != 1 || p == q){
-        cout << "Public key is not valid!" << endl;
+        cout << "Public key is not valid!";
         return 0;
     }
     cout << p << " " << q <<" " <<  phi_n << " ";
     //if extended gcd == 1 then d = alpha
     vector<int> nums(3);
     nums = gcd_extended(e,phi_n,nums);
-    cout << nums[1] << endl;
+    int d = nums[1];
+    cout << d << endl;
+    vector<int> decripted;
+    for(int i = 0; i < message.size(); i++){
+        decripted.push_back(static_cast<long long>(pow(message.at(i),d) ) % n );
+        cout << decripted.back() << " ";
+    }
+    cout << endl;
+    vector<char> decoder = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',' ','\"',',','.','\''};
+    for(int i =0; i < decripted.size(); i++){
+        cout << decoder.at(decripted.at(i) -7);
+    }
     return 0;
 }
 
